@@ -7,15 +7,17 @@
  */
 /* @var $this yii\web\View */
 /* @var $widget \skeeks\cms\shopCheckoutSimple\ShopCheckoutSimpleWidget */
+\skeeks\cms\shopCheckoutSimple\assets\ShopCheckoutSimpleWidgetAsset::register($this);
+
 $widget     = $this->context;
 $shopFuser  = $widget->shopFuser;
-
+$clientOptions = \yii\helpers\Json::encode($widget->clientOptions);
 ?>
 <?= \yii\helpers\Html::beginTag('div', $widget->options); ?>
     <? if ($widget->shopIsReady) : ?>
 
     <?php $form = \yii\bootstrap\ActiveForm::begin([
-        'id'                                            => 'sx-checkout-form',
+        'id'                                            => $widget->formId,
         'enableAjaxValidation'                          => false,
         'enableClientValidation'                        => false,
         'options'                        =>
@@ -23,45 +25,14 @@ $shopFuser  = $widget->shopFuser;
             'data-pjax' => 'true'
         ]
     ]); ?>
+
     <? $this->registerJs(<<<JS
-
-(function(sx, $, _)
-{
-    sx.classes.Export = sx.classes.Component.extend({
-
-        _onDomReady: function()
-        {
-            var self = this;
-
-            $("[data-form-reload=true]").on('change', function()
-            {
-                self.update();
-            });
-
-            $("[data-form-reload=true] input[type=radio]").on('change', function()
-            {
-                self.update();
-            });
-
-        },
-
-        update: function()
-        {
-            _.delay(function()
-            {
-                var jForm = $("#sx-checkout-form");
-                jForm.append($('<input>', {'type': 'hidden', 'name' : 'sx-not-submit', 'value': 'true'}));
-                jForm.submit();
-            }, 200);
-        }
-    });
-
-    sx.Export = new sx.classes.Export();
-})(sx, sx.$, sx._);
-
-
+    (function(sx, $, _)
+    {
+        new sx.classes.SimpleCheckoutWidget({$clientOptions});
+    })(sx, sx.$, sx._);
 JS
-); ?>
+    ); ?>
 
     <? if (count(\Yii::$app->shop->shopPersonTypes) <= 1) : ?>
         <div style="display: none;">
@@ -96,12 +67,11 @@ JS
                 ]
             ); ?>
 
-            <?=
-                \yii\helpers\Html::button('Отправить', [
-                    'class' => 'btn btn-primary',
-                    'type' => 'submit',
-                ])
-            ?>
+            <?= \yii\helpers\Html::beginTag('div', $widget->btnSubmitWrapperOptions); ?>
+                <?=
+                    \yii\helpers\Html::button($widget->btnSubmitName, $widget->btnSubmitOptions)
+                ?>
+            <?= \yii\helpers\Html::endTag('div'); ?>
         <? $form::end(); ?>
     <? else : ?>
         Магазин не настроен

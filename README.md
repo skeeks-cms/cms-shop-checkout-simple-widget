@@ -27,6 +27,23 @@ Example
 
 ```
 
+Example advanced
+----------
+
+```php
+
+<? $checkoutWidget = \skeeks\cms\shopCheckoutSimple\ShopCheckoutSimpleWidget::begin([
+    'btnSubmitWrapperOptions' => [
+        'style' => 'display: none;'
+    ]
+]); ?>
+
+<? \skeeks\cms\shopCheckoutSimple\ShopCheckoutSimpleWidget::end(); ?>
+
+<a href="#" onclick="$('#{$checkoutWidget->formId}').submit(); return false;">Отправка вне формы</a>
+
+```
+
 
 ##Links
 * [Web site](http://cms.skeeks.com)

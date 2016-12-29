@@ -13,9 +13,11 @@ use skeeks\cms\shop\models\ShopFuser;
 use skeeks\cms\shop\models\ShopOrder;
 use yii\base\Exception;
 use yii\base\Widget;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 /**
+ * @property string formId
  * @property bool shopIsReady
  * @property ShopBuyer shopBuyer
  *
@@ -29,6 +31,14 @@ class ShopCheckoutSimpleWidget extends Widget
     public $viewFile = 'default';
 
     public $options = [];
+    public $clientOptions = [];
+
+    public $btnSubmitWrapperOptions     = [];
+    public $btnSubmitName               = '';
+    public $btnSubmitOptions            = [
+        'class' => 'btn btn-primary',
+        'type' => 'submit',
+    ];
 
     /**
      * @var ShopFuser
@@ -47,6 +57,7 @@ class ShopCheckoutSimpleWidget extends Widget
     public function init()
     {
         parent::init();
+        static::registerTranslations();
 
         $this->options['id'] = $this->id;
 
@@ -57,6 +68,16 @@ class ShopCheckoutSimpleWidget extends Widget
         }
         //Покупателя никогда нет
         $this->shopFuser->buyer_id = null;
+
+        $this->clientOptions = ArrayHelper::merge($this->clientOptions, [
+            'forimid' => $this->formId,
+            'notsubmit' => $this->notSubmitParam,
+        ]);
+
+        if (!$this->btnSubmitName)
+        {
+            $this->btnSubmitName = \Yii::t('skeeks/shop-checkout-simple', 'Submit');
+        }
     }
 
     public function run()
@@ -144,5 +165,33 @@ JS
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormId()
+    {
+        return $this->id . "-form";
+    }
+
+
+
+    static public $isRegisteredTranslations = false;
+
+    static public function registerTranslations()
+    {
+        if (self::$isRegisteredTranslations === false)
+        {
+            \Yii::$app->i18n->translations['skeeks/shop-checkout-simple'] = [
+                'class' => 'yii\i18n\PhpMessageSource',
+                'sourceLanguage' => 'en',
+                'basePath' => '@skeeks/cms/shopCheckoutSimple/messages',
+                'fileMap' => [
+                    'skeeks/shop-checkout-simple' => 'main.php',
+                ],
+            ];
+            self::$isRegisteredTranslations = true;
+        }
     }
 }
