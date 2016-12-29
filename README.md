@@ -9,13 +9,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist skeeks/skeeks/cms-shop-checkout-simple-widget "*"
+php composer.phar require --prefer-dist skeeks/cms-shop-checkout-simple-widget "*"
 ```
 
 or add
 
 ```
-"skeeks/skeeks/cms-shop-checkout-simple-widget": "*"
+"skeeks/cms-shop-checkout-simple-widget": "*"
 ```
 
 Example
