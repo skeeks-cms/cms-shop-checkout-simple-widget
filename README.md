@@ -1,4 +1,4 @@
-Widget shop cart steps for SkeekS CMS
+Widget shop simple checkout for SkeekS CMS
 ===================================
 
 Installation
@@ -22,14 +22,11 @@ Example
 ----------
 
 ```php
-<?= \skeeks\cms\shopCartStepsWidget\ShopCartStepsWidget::widget(); ?>
-```
 
-View file
-----------
-```php
+<?= \skeeks\cms\shopCheckoutSimple\ShopCheckoutSimpleWidget::widget(); ?>
 
 ```
+
 
 ##Links
 * [Web site](http://cms.skeeks.com)

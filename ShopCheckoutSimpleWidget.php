@@ -13,13 +13,14 @@ use skeeks\cms\shop\models\ShopFuser;
 use skeeks\cms\shop\models\ShopOrder;
 use yii\base\Exception;
 use yii\base\Widget;
+use yii\helpers\Json;
 
 /**
  * @property bool shopIsReady
  * @property ShopBuyer shopBuyer
  *
  * Class ShopCheckoutSimpleWidget
- * @package skeeks\cms\shopCheckoutSimple
+ * @package skeeks\cms\shopCheckoutSimpleWidget
  */
 class ShopCheckoutSimpleWidget extends Widget
 {
@@ -49,8 +50,13 @@ class ShopCheckoutSimpleWidget extends Widget
 
         $this->options['id'] = $this->id;
 
-        $this->shopFuser = \Yii::$app->shop->shopFuser;
-        $this->shopFuser->loadDefaultValues();
+        if (!$this->shopFuser)
+        {
+            $this->shopFuser = \Yii::$app->shop->shopFuser;
+            $this->shopFuser->loadDefaultValues();
+        }
+        //Покупателя никогда нет
+        $this->shopFuser->buyer_id = null;
     }
 
     public function run()
@@ -61,7 +67,10 @@ class ShopCheckoutSimpleWidget extends Widget
         if ($post = \Yii::$app->request->post())
         {
             $this->shopFuser->load($post);
-            $this->shopFuser->save();
+            if (!$this->shopFuser->save())
+            {
+                \Yii::error("Error widget: " . Json::encode($this->shopFuser->errors), static::class);
+            }
         }
 
         $this->shopBuyer = $this->shopFuser->personType->createModelShopBuyer();
@@ -136,29 +145,4 @@ JS
 
         return true;
     }
-
-
-
-    static public $isRegisteredTranslations = false;
-
-    static public function registerTranslations()
-    {
-        if (self::$isRegisteredTranslations === false)
-        {
-            \Yii::$app->i18n->translations['skeeks/shop-checkout-simple'] = [
-                'class' => 'yii\i18n\PhpMessageSource',
-                'sourceLanguage' => 'en',
-                'basePath' => '@skeeks/cms/shopCheckoutSimple/messages',
-                'fileMap' => [
-                    'skeeks/shop-checkout-simple' => 'main.php',
-                ],
-            ];
-            self::$isRegisteredTranslations = true;
-        }
-    }
-
 }
-
-
-
-
