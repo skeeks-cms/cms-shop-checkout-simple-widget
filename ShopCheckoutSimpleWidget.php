@@ -70,7 +70,7 @@ class ShopCheckoutSimpleWidget extends Widget
         $this->shopFuser->buyer_id = null;
 
         $this->clientOptions = ArrayHelper::merge($this->clientOptions, [
-            'forimid' => $this->formId,
+            'formid' => $this->formId,
             'notsubmit' => $this->notSubmitParam,
         ]);
 
