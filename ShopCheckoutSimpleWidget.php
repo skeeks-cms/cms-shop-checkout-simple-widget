@@ -106,7 +106,7 @@ class ShopCheckoutSimpleWidget extends Widget
             }
         }
 
-        if ($rr->isRequestPjaxPost())
+        if ($rr->isRequestPjaxPost() && \Yii::$app->request->post($this->id))
         {
             if (!\Yii::$app->request->post($this->notSubmitParam))
             {
